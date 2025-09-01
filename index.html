@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Timetable Notifier</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="card center">
+      <h1>Welcome</h1>
+      <p>Sign in with any id (email or name). This app will save your timetable locally in your browser.</p>
+      <input id="userIdInput" type="text" placeholder="Enter your id or email" />
+      <button id="loginBtn">Continue</button>
+      <small class="muted">No password needed — purely client-side. Use same id on other devices to load same data (if you copy the same id).</small>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="mainApp" style="display:none;">
+      <header class="topbar">
+        <h1>📅 Timetable Notifier</h1>
+        <div class="userArea">
+          <span id="userLabel"></span>
+          <button id="logoutBtn" class="ghost">Logout</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="info card">
+          <p>This app notifies you <strong>10 minutes before</strong> each class while the page or PWA is open. Allow notifications when prompted.</p>
+          <p class="muted">To get notifications when the browser is closed you must add Firebase Cloud Messaging and a server scheduler (optional — instructions in the code comments).</p>
+        </section>
+
+        <section id="todaySection" class="card">
+          <h2>Today's Classes <small id="todayLabel"></small></h2>
+          <ul id="todayList" class="list"></ul>
+        </section>
+
+        <section class="card">
+          <h2>Manage Timetable</h2>
+          <form id="classForm" class="form-inline">
+            <select id="dayInput">
+              <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+              <option>Thursday</option><option>Friday</option><option>Saturday</option>
+            </select>
+            <input id="timeInput" type="time" required />
+            <input id="subjectInput" type="text" placeholder="Subject / Lab (e.g. CV or DV Lab B1)" required />
+            <button id="addBtn" type="submit">Add</button>
+          </form>
+
+          <table id="timetableTable" class="table">
+            <thead><tr><th>Day</th><th>Time</th><th>Subject</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="script.js" type="module"></script>
+</body>
+</html>
