@@ -6,14 +6,13 @@
   <title>Timetable Notifier</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="manifest" href="manifest.json">
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/sw.js").then(() => {
-      console.log("Service Worker Registered");
-    });
-  }
-</script>
-
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").then(() => {
+        console.log("Service Worker Registered");
+      });
+    }
+  </script>
 </head>
 <body>
   <div id="app">
@@ -64,6 +63,11 @@
             <tbody></tbody>
           </table>
         </section>
+
+        <!-- 🔔 Test Notification Button -->
+        <button id="testNotifyBtn" style="margin-top: 12px; padding: 8px 12px; border-radius: 8px; background: #1f6feb; color: white;">
+          🔔 Test Notification
+        </button>
       </main>
     </div>
   </div>

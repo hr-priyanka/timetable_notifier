@@ -1,7 +1,3 @@
-// script.js (no build tools required) - save as module
-// This is client-only: login (any id), per-user localStorage timetable, add/delete, notifications 10 minutes before.
-// Optional: FCM placeholders provided if you later want push when browser closed (see comments).
-
 // -------------------- Helper / Constants --------------------
 const DEFAULT_DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const LS_PREFIX = "ttnotifier_user_"; // localStorage key prefix
@@ -133,6 +129,19 @@ function checkReminders() {
   });
 }
 
+// -------------------- Test Notification Button --------------------
+const testNotifyBtn = document.getElementById("testNotifyBtn");
+if (testNotifyBtn) {
+  testNotifyBtn.addEventListener("click", async () => {
+    const granted = await requestNotificationPermission();
+    if (granted) {
+      tryNotify("✅ Notification Test", "Your notification system is working!");
+    } else {
+      alert("Please enable notifications in your mobile browser settings.");
+    }
+  });
+}
+
 // -------------------- Form handling --------------------
 classForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -157,15 +166,15 @@ loginBtn.addEventListener("click", () => {
   showLogin(false);
   renderTable();
   renderToday();
-  requestNotificationPermission();
+
+  // Instead of silently requesting, guide user
+  alert("After logging in, please tap the 'Test Notification' button to enable notifications.");
+
   startReminderChecker();
-  // OPTIONAL: register service worker & try to get push token for FCM if you later add Firebase config
-  // registerServiceWorkerForFCM(); // uncomment if you add FCM and service worker
 });
 
 logoutBtn.addEventListener("click", () => {
   if (!confirm("Logout?")) return;
-  // clear state
   currentUserId = null;
   timetable = {};
   userIdInput.value = "";
@@ -174,39 +183,14 @@ logoutBtn.addEventListener("click", () => {
 
 // -------------------- On load --------------------
 (function init() {
-  // if user had a lastId saved, auto-fill (not auto-login)
   const last = localStorage.getItem("ttnotifier_lastid");
   if (last) userIdInput.value = last;
   showLogin(true);
 })();
 
-// when user logs in, store last id for convenience
 document.addEventListener("visibilitychange", () => {
   if (currentUserId) localStorage.setItem("ttnotifier_lastid", currentUserId);
 });
 
 // refresh today's highlight every minute
 setInterval(renderToday, 60000);
-
-/* ================== OPTIONAL: Firebase FCM Hooks (for background push) ==================
-If you want notifications that arrive when the browser is closed, you need to:
-  1) Create a Firebase project and enable Cloud Messaging.
-  2) Add firebase-messaging-sw.js (service worker) at the site root.
-  3) Add Firebase client code to obtain the FCM token and store it somewhere (server or Firestore).
-  4) Run a server/cloud function to send push messages 10 minutes before classes using FCM.
-
-Below is a minimal stub you can fill later. DO NOT call this function until you add Firebase and the service worker.
-
-async function registerServiceWorkerForFCM() {
-  if (!('serviceWorker' in navigator)) return;
-  try {
-    const reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-    console.log('SW registered:', reg);
-
-    // Example: initialize Firebase app in client, call getToken() and send token to your server/database.
-    // See Firebase docs for VAPID key and getToken usage.
-  } catch(e) {
-    console.error('SW register failed', e);
-  }
-}
-====================================================================================== */
